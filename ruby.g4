@@ -33,10 +33,6 @@ terminator : terminator SEMICOLON
            | CRLF
            ;
 
-INT : [0-9]+;
-FLOAT : [0-9]*'.'[0-9]+;
-ID : [a-zA-Z_][a-zA-Z0-9_]*;
-
 fragment ESCAPED_QUOTE : '\\"';
 LITERAL : '"' ( ESCAPED_QUOTE | ~('\n'|'\r') )*? '"'
         | '\'' ( ESCAPED_QUOTE | ~('\n'|'\r') )*? '\'';
@@ -50,5 +46,10 @@ FALSE : 'false';
 
 NIL : 'nil';
 
-SL_COMMENT : '#' ~('\r' | '\n')* '\n' {skip();} ;
-ML_COMMENT : '=begin' .*? '=end\n' {skip();} ;
+SL_COMMENT : '#' ~('\r' | '\n')* '\n' {skip();};
+ML_COMMENT : '=begin' .*? '=end\n' {skip();};
+WS : (' ')+ {skip();};
+
+INT : [0-9]+;
+FLOAT : [0-9]*'.'[0-9]+;
+ID : [a-zA-Z_][a-zA-Z0-9_]*;
