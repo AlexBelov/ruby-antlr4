@@ -6,7 +6,11 @@ expression_list : expression terminator
                 | expression_list expression terminator
                 ;
 
-expression : rvalue;
+expression : require_block
+           | rvalue
+           ;
+
+require_block : REQUIRE literal_t;
 
 assignment : lvalue ASSIGN rvalue
            | lvalue PLUS_ASSIGN rvalue
@@ -89,6 +93,8 @@ LITERAL : '"' ( ESCAPED_QUOTE | ~('\n'|'\r') )*? '"'
 COMMA : ',';  
 SEMICOLON : ';';
 CRLF : '\n';
+
+REQUIRE : 'require';
 
 TRUE : 'true';
 FALSE : 'false';
