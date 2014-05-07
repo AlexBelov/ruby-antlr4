@@ -128,42 +128,7 @@ assignment : lvalue ASSIGN rvalue
              {
               definitions.add($lvalue.text);
              }
-           | lvalue PLUS_ASSIGN rvalue
-             {
-              String variable = $lvalue.text;
-              if (!is_defined(definitions, variable)) {
-                System.out.println("Error: Undefined variable " + variable + "!");
-              }         
-             }
-           | lvalue MINUS_ASSIGN rvalue
-             {
-              String variable = $lvalue.text;
-              if (!is_defined(definitions, variable)) {
-                System.out.println("Error: Undefined variable " + variable + "!");
-              }         
-             }
-           | lvalue MUL_ASSIGN rvalue
-             {
-              String variable = $lvalue.text;
-              if (!is_defined(definitions, variable)) {
-                System.out.println("Error: Undefined variable " + variable + "!");
-              }         
-             }
-           | lvalue DIV_ASSIGN rvalue
-             {
-              String variable = $lvalue.text;
-              if (!is_defined(definitions, variable)) {
-                System.out.println("Error: Undefined variable " + variable + "!");
-              }         
-             }
-           | lvalue MOD_ASSIGN rvalue
-             {
-              String variable = $lvalue.text;
-              if (!is_defined(definitions, variable)) {
-                System.out.println("Error: Undefined variable " + variable + "!");
-              }         
-             }
-           | lvalue EXP_ASSIGN rvalue
+           | lvalue ( PLUS_ASSIGN | MINUS_ASSIGN | MUL_ASSIGN | DIV_ASSIGN | MOD_ASSIGN | EXP_ASSIGN ) rvalue
              {
               String variable = $lvalue.text;
               if (!is_defined(definitions, variable)) {
