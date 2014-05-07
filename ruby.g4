@@ -8,6 +8,7 @@ expression_list : expression terminator
 
 expression : function_definition
            | require_block
+           | if_statement
            | rvalue
            | return_statement
            ;
@@ -35,6 +36,18 @@ function_definition_params_list : id
                                 ;
 
 return_statement : RETURN rvalue;
+
+if_elsif_statement : ELSIF rvalue CRLF expression_list
+                   | ELSIF rvalue CRLF expression_list ELSE CRLF expression_list
+                   | ELSIF rvalue CRLF expression_list if_elsif_statement
+                   ;
+
+if_statement : IF rvalue CRLF expression_list END
+             | IF rvalue THEN expression_list END
+             | IF rvalue CRLF expression_list ELSE CRLF expression_list END
+             | IF rvalue THEN expression_list ELSE expression_list END
+             | IF rvalue CRLF expression_list if_elsif_statement END
+             ;
 
 assignment : lvalue ASSIGN rvalue
            | lvalue PLUS_ASSIGN rvalue
@@ -124,6 +137,11 @@ REQUIRE : 'require';
 END : 'end';
 DEF : 'def';
 RETURN : 'return';
+
+IF: 'if';
+THEN : 'then';
+ELSE : 'else';
+ELSIF : 'elsif';
 
 TRUE : 'true';
 FALSE : 'false';
