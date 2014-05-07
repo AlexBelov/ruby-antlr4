@@ -6,11 +6,32 @@ expression_list : expression terminator
                 | expression_list expression terminator
                 ;
 
-expression : require_block
+expression : function_definition
+           | require_block
            | rvalue
            ;
 
 require_block : REQUIRE literal_t;
+
+function_definition : function_definition_header function_definition_body END;
+
+function_definition_body : expression_list;
+
+function_definition_header : DEF function_name CRLF
+                           | DEF function_name function_definition_params CRLF
+                           ;
+
+function_name : id_function
+              | id
+              ;
+
+function_definition_params : LEFT_RBRACKET function_definition_params_list RIGHT_RBRACKET
+                           | function_definition_params_list
+                           ;
+
+function_definition_params_list : id
+                                | function_definition_params_list COMMA id
+                                ;
 
 assignment : lvalue ASSIGN rvalue
            | lvalue PLUS_ASSIGN rvalue
@@ -80,6 +101,8 @@ id : ID;
 
 id_global : ID_GLOBAL;
 
+id_function : ID_FUNCTION;
+
 terminator : terminator SEMICOLON
            | terminator CRLF
            | SEMICOLON
@@ -95,6 +118,8 @@ SEMICOLON : ';';
 CRLF : '\n';
 
 REQUIRE : 'require';
+END : 'end';
+DEF : 'def';
 
 TRUE : 'true';
 FALSE : 'false';
@@ -132,13 +157,17 @@ AND : 'and' | '&&';
 OR : 'or' | '||';
 NOT : 'not' | '!';
 
+LEFT_RBRACKET : '(';
+RIGHT_RBRACKET : ')';
+
 NIL : 'nil';
 
 SL_COMMENT : '#' ~('\r' | '\n')* '\n' {skip();};
 ML_COMMENT : '=begin' .*? '=end\n' {skip();};
-WS : (' ')+ {skip();};
+WS : (' '|'\t')+ {skip();};
 
 INT : [0-9]+;
 FLOAT : [0-9]*'.'[0-9]+;
 ID : [a-zA-Z_][a-zA-Z0-9_]*;
 ID_GLOBAL : '$'ID;
+ID_FUNCTION : ID[!?];
