@@ -3,5 +3,5 @@
 
 # But not these files...
 !.gitignore
-!ruby.g4
+!Ruby.g4
 !run.sh
