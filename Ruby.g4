@@ -2,6 +2,7 @@ grammar Ruby;
 
 @members {
   public int SemanticErrorsNum = 0;
+  public int NumStr = 0;
   java.util.LinkedList<String> definitions = new java.util.LinkedList<String>();
 
   public static boolean is_defined(java.util.LinkedList<String> definitions, String variable) {
@@ -34,11 +35,12 @@ function_definition : function_definition_header function_definition_body END;
 
 function_definition_body : expression_list;
 
-function_definition_header : DEF function_name CRLF
+function_definition_header : DEF function_name crlf
                              {
                               String func = $function_name.text;
                               if (is_defined(definitions, func)) {
-                                System.out.println("Error: Function " + func + " is already defined!");
+                                System.out.println("line " + NumStr + " Error! Function " + func + " is already defined!");
+
                                 SemanticErrorsNum++;
                               } 
                               else {
@@ -46,11 +48,11 @@ function_definition_header : DEF function_name CRLF
                                 //System.out.println(definitions.getLast());
                               }
                              }
-                           | DEF function_name function_definition_params CRLF
+                           | DEF function_name function_definition_params crlf
                              {
                               String func = $function_name.text;
                               if (is_defined(definitions, func)) {
-                                System.out.println("Error: Function " + func + " is already defined!");
+                                System.out.println("line " + NumStr + " Error! Function " + func + " is already defined!");
                                 SemanticErrorsNum++;
                               } 
                               else {
@@ -78,7 +80,7 @@ function_call : function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRAC
                 {
                   String func = $function_name.text;
                   if (!is_defined(definitions, func)) {
-                    System.out.println("Error: Undefined function " + func + "!");
+                    System.out.println("line " + NumStr + " Error! Undefined function " + func + "!");
                     SemanticErrorsNum++;
                   }
                 }
@@ -86,7 +88,7 @@ function_call : function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRAC
                 {
                   String func = $function_name.text;
                   if (!is_defined(definitions, func)) {
-                    System.out.println("Error: Undefined function " + func + "!");
+                    System.out.println("line " + NumStr + " Error! Undefined function " + func + "!");
                     SemanticErrorsNum++;
                   }
                 }
@@ -94,7 +96,7 @@ function_call : function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRAC
                 {
                   String func = $function_name.text;
                   if (!is_defined(definitions, func)) {
-                    System.out.println("Error: Undefined function " + func + "!");
+                    System.out.println("line " + NumStr + " Error! Undefined function " + func + "!");
                     SemanticErrorsNum++;
                   }
                 }
@@ -106,21 +108,21 @@ function_call_params : rvalue
                      | function_call_params COMMA rvalue
                      ;
 
-if_elsif_statement : ELSIF rvalue CRLF expression_list
-                   | ELSIF rvalue CRLF expression_list ELSE CRLF expression_list
-                   | ELSIF rvalue CRLF expression_list if_elsif_statement
+if_elsif_statement : ELSIF rvalue crlf expression_list
+                   | ELSIF rvalue crlf expression_list ELSE crlf expression_list
+                   | ELSIF rvalue crlf expression_list if_elsif_statement
                    ;
 
-if_statement : IF rvalue CRLF expression_list END
+if_statement : IF rvalue crlf expression_list END
              | IF rvalue THEN expression_list END
-             | IF rvalue CRLF expression_list ELSE CRLF expression_list END
+             | IF rvalue crlf expression_list ELSE crlf expression_list END
              | IF rvalue THEN expression_list ELSE expression_list END
-             | IF rvalue CRLF expression_list if_elsif_statement END
+             | IF rvalue crlf expression_list if_elsif_statement END
              ;
 
-unless_statement : UNLESS rvalue CRLF expression_list END;
+unless_statement : UNLESS rvalue crlf expression_list END;
 
-while_statement : WHILE rvalue CRLF while_expression_list END;
+while_statement : WHILE rvalue crlf while_expression_list END;
 
 while_expression_list : expression terminator
                       | RETRY terminator
@@ -138,7 +140,7 @@ assignment : lvalue ASSIGN rvalue
              {
               String variable = $lvalue.text;
               if (!is_defined(definitions, variable)) {
-                System.out.println("Error: Undefined variable " + variable + "!");
+                System.out.println("line " + NumStr + " Error! Undefined variable " + variable + "!");
                 SemanticErrorsNum++;
               }         
              }
@@ -148,7 +150,7 @@ array_assignment : lvalue array_definition ASSIGN rvalue
                    {
                     String variable = $lvalue.text;
                     if (!is_defined(definitions, variable)) {
-                      System.out.println("Error: Undefined variable " + variable + "!");
+                      System.out.println("line " + NumStr + " Error! Undefined variable " + variable + "!");
                       SemanticErrorsNum++;
                     }
                    }
@@ -210,7 +212,7 @@ rvalue : lvalue
          {
           String variable = $lvalue.text;
           if (!is_defined(definitions, variable)) {
-            System.out.println("Error: Undefined variable " + variable + "!");
+            System.out.println("line " + NumStr + " Error! Undefined variable " + variable + "!");
             SemanticErrorsNum++;
           }
          }       
@@ -280,10 +282,16 @@ id_global : ID_GLOBAL;
 id_function : ID_FUNCTION;
 
 terminator : terminator SEMICOLON
-           | terminator CRLF
+           | terminator crlf
            | SEMICOLON
-           | CRLF
+           | crlf
            ;
+
+crlf : CRLF
+       {
+        NumStr++;
+       }
+     ;
 
 fragment ESCAPED_QUOTE : '\\"';
 LITERAL : '"' ( ESCAPED_QUOTE | ~('\n'|'\r') )*? '"'
