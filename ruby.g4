@@ -9,6 +9,7 @@ expression_list : expression terminator
 expression : function_definition
            | require_block
            | if_statement
+           | unless_statement
            | rvalue
            | return_statement
            ;
@@ -48,6 +49,8 @@ if_statement : IF rvalue CRLF expression_list END
              | IF rvalue THEN expression_list ELSE expression_list END
              | IF rvalue CRLF expression_list if_elsif_statement END
              ;
+
+unless_statement : UNLESS rvalue CRLF expression_list END;
 
 assignment : lvalue ASSIGN rvalue
            | lvalue PLUS_ASSIGN rvalue
@@ -142,6 +145,7 @@ IF: 'if';
 THEN : 'then';
 ELSE : 'else';
 ELSIF : 'elsif';
+UNLESS : 'unless';
 
 TRUE : 'true';
 FALSE : 'false';
