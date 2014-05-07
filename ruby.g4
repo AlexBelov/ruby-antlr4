@@ -12,6 +12,7 @@ expression : function_definition
            | unless_statement
            | rvalue
            | return_statement
+           | while_statement
            ;
 
 require_block : REQUIRE literal_t;
@@ -61,6 +62,16 @@ if_statement : IF rvalue CRLF expression_list END
              ;
 
 unless_statement : UNLESS rvalue CRLF expression_list END;
+
+while_statement : WHILE rvalue CRLF while_expression_list END;
+
+while_expression_list : expression terminator
+                      | RETRY terminator
+                      | BREAK terminator
+                      | while_expression_list expression terminator
+                      | while_expression_list RETRY terminator
+                      | while_expression_list BREAK terminator
+                      ;
 
 assignment : lvalue ASSIGN rvalue
            | lvalue PLUS_ASSIGN rvalue
@@ -157,6 +168,9 @@ THEN : 'then';
 ELSE : 'else';
 ELSIF : 'elsif';
 UNLESS : 'unless';
+WHILE : 'while';
+RETRY : 'retry';
+BREAK : 'break';
 
 TRUE : 'true';
 FALSE : 'false';
