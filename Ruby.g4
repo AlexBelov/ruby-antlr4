@@ -1,15 +1,16 @@
 grammar Ruby;
 
 @members {
-   java.util.LinkedList<String> definitions = new  java.util.LinkedList<String>();
+  int SemanticErrorsNum;
+  java.util.LinkedList<String> definitions = new  java.util.LinkedList<String>();
 
-   public static boolean is_defined(java.util.LinkedList<String> definitions, String variable) {
-        int index = definitions.indexOf(variable);
-        if (index == -1) {
-          return false;
-        }
-        return true;
-   }
+  public static boolean is_defined(java.util.LinkedList<String> definitions, String variable) {
+       int index = definitions.indexOf(variable);
+       if (index == -1) {
+         return false;
+       }
+       return true;
+  }
 }
 
 prog : expression_list;
@@ -38,6 +39,7 @@ function_definition_header : DEF function_name CRLF
                               String func = $function_name.text;
                               if (is_defined(definitions, func)) {
                                 System.out.println("Error: Function " + func + " is already defined!");
+                                SemanticErrorsNum++;
                               } 
                               else {
                                 definitions.add(func);
@@ -49,6 +51,7 @@ function_definition_header : DEF function_name CRLF
                               String func = $function_name.text;
                               if (is_defined(definitions, func)) {
                                 System.out.println("Error: Function " + func + " is already defined!");
+                                SemanticErrorsNum++;
                               } 
                               else {
                                 definitions.add(func);
@@ -76,6 +79,7 @@ function_call : function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRAC
                   String func = $function_name.text;
                   if (!is_defined(definitions, func)) {
                     System.out.println("Error: Undefined function " + func + "!");
+                    SemanticErrorsNum++;
                   }
                 }
               | function_name function_call_param_list
@@ -83,6 +87,7 @@ function_call : function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRAC
                   String func = $function_name.text;
                   if (!is_defined(definitions, func)) {
                     System.out.println("Error: Undefined function " + func + "!");
+                    SemanticErrorsNum++;
                   }
                 }
               | function_name LEFT_RBRACKET RIGHT_RBRACKET
@@ -90,6 +95,7 @@ function_call : function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRAC
                   String func = $function_name.text;
                   if (!is_defined(definitions, func)) {
                     System.out.println("Error: Undefined function " + func + "!");
+                    SemanticErrorsNum++;
                   }
                 }
               ;
@@ -133,6 +139,7 @@ assignment : lvalue ASSIGN rvalue
               String variable = $lvalue.text;
               if (!is_defined(definitions, variable)) {
                 System.out.println("Error: Undefined variable " + variable + "!");
+                SemanticErrorsNum++;
               }         
              }
            ;
@@ -142,6 +149,7 @@ array_assignment : lvalue array_definition ASSIGN rvalue
                     String variable = $lvalue.text;
                     if (!is_defined(definitions, variable)) {
                       System.out.println("Error: Undefined variable " + variable + "!");
+                      SemanticErrorsNum++;
                     } 
                    }
                  | lvalue ASSIGN array_definition
@@ -172,6 +180,7 @@ rvalue : lvalue
           String variable = $lvalue.text;
           if (!is_defined(definitions, variable)) {
             System.out.println("Error: Undefined variable " + variable + "!");
+            SemanticErrorsNum++;
           }
          } 
        | array_assignment
