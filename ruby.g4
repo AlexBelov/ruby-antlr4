@@ -38,6 +38,16 @@ function_definition_params_list : id
 
 return_statement : RETURN rvalue;
 
+function_call : function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRACKET
+              | function_name function_call_param_list
+              ;
+
+function_call_param_list : function_call_params;
+
+function_call_params : rvalue
+                     | function_call_params COMMA rvalue
+                     ;
+
 if_elsif_statement : ELSIF rvalue CRLF expression_list
                    | ELSIF rvalue CRLF expression_list ELSE CRLF expression_list
                    | ELSIF rvalue CRLF expression_list if_elsif_statement
@@ -67,6 +77,7 @@ lvalue : id
 
 rvalue : lvalue 
        | assignment
+       | function_call
        | literal_t
        | bool_t
        | float_t
