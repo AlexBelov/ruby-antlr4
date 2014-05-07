@@ -1,5 +1,17 @@
 grammar Ruby;
 
+@members {
+   java.util.LinkedList<String> definitions = new  java.util.LinkedList<String>();
+
+   public static boolean is_defined(java.util.LinkedList<String> definitions, String variable) {
+        int index = definitions.indexOf(variable);
+        if (index == -1) {
+          return false;
+        }
+        return true;
+   }
+}
+
 prog : expression_list;
 
 expression_list : expression terminator
@@ -22,7 +34,27 @@ function_definition : function_definition_header function_definition_body END;
 function_definition_body : expression_list;
 
 function_definition_header : DEF function_name CRLF
+                             {
+                              String func = $function_name.text;
+                              if (is_defined(definitions, func)) {
+                                System.out.println("Error: Function " + func + " is already defined!");
+                              } 
+                              else {
+                                definitions.add(func);
+                                //System.out.println(definitions.getLast());
+                              }
+                             }
                            | DEF function_name function_definition_params CRLF
+                             {
+                              String func = $function_name.text;
+                              if (is_defined(definitions, func)) {
+                                System.out.println("Error: Function " + func + " is already defined!");
+                              } 
+                              else {
+                                definitions.add(func);
+                                System.out.println(definitions.getLast());
+                              }
+                             }
                            ;
 
 function_name : id_function
@@ -40,7 +72,26 @@ function_definition_params_list : id
 return_statement : RETURN rvalue;
 
 function_call : function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRACKET
+                {
+                  String func = $function_name.text;
+                  if (!is_defined(definitions, func)) {
+                    System.out.println("Error: Undefined function " + func + "!");
+                  }
+                }
               | function_name function_call_param_list
+                {
+                  String func = $function_name.text;
+                  if (!is_defined(definitions, func)) {
+                    System.out.println("Error: Undefined function " + func + "!");
+                  }
+                }
+              | function_name LEFT_RBRACKET RIGHT_RBRACKET
+                {
+                  String func = $function_name.text;
+                  if (!is_defined(definitions, func)) {
+                    System.out.println("Error: Undefined function " + func + "!");
+                  }
+                }
               ;
 
 function_call_param_list : function_call_params;
@@ -74,15 +125,70 @@ while_expression_list : expression terminator
                       ;
 
 assignment : lvalue ASSIGN rvalue
+             {
+              String rval = $rvalue.text;
+              String lval = $lvalue.text;
+
+              if (rval.substring(0).equals("[")) {
+                definitions.add($lvalue.text);
+              }
+              else if (lval.substring(lval.length()-1).equals("]")) {
+                if (!is_defined(definitions, lval.substring(0, lval.indexOf("[")))) {
+                  System.out.println("Error: Undefined variable " + lval + "!");
+                }
+              }
+              else {
+                definitions.add($lvalue.text);
+                //System.out.println(definitions.getLast());
+              }
+             }
            | lvalue PLUS_ASSIGN rvalue
+             {
+              String variable = $lvalue.text;
+              if (!is_defined(definitions, variable)) {
+                System.out.println("Error: Undefined variable " + variable + "!");
+              }         
+             }
            | lvalue MINUS_ASSIGN rvalue
+             {
+              String variable = $lvalue.text;
+              if (!is_defined(definitions, variable)) {
+                System.out.println("Error: Undefined variable " + variable + "!");
+              }         
+             }
            | lvalue MUL_ASSIGN rvalue
+             {
+              String variable = $lvalue.text;
+              if (!is_defined(definitions, variable)) {
+                System.out.println("Error: Undefined variable " + variable + "!");
+              }         
+             }
            | lvalue DIV_ASSIGN rvalue
+             {
+              String variable = $lvalue.text;
+              if (!is_defined(definitions, variable)) {
+                System.out.println("Error: Undefined variable " + variable + "!");
+              }         
+             }
            | lvalue MOD_ASSIGN rvalue
+             {
+              String variable = $lvalue.text;
+              if (!is_defined(definitions, variable)) {
+                System.out.println("Error: Undefined variable " + variable + "!");
+              }         
+             }
            | lvalue EXP_ASSIGN rvalue
+             {
+              String variable = $lvalue.text;
+              if (!is_defined(definitions, variable)) {
+                System.out.println("Error: Undefined variable " + variable + "!");
+              }         
+             }
            ;
 
-array_definition : LEFT_SBRACKET array_definition_elements RIGHT_SBRACKET;
+array_definition : LEFT_SBRACKET array_definition_elements RIGHT_SBRACKET
+                 | LEFT_SBRACKET RIGHT_SBRACKET
+                 ;
 
 array_definition_elements : rvalue
                           | array_definition_elements COMMA rvalue
@@ -94,8 +200,11 @@ array_selector : id LEFT_SBRACKET rvalue RIGHT_SBRACKET
                ;
 
 lvalue : id
+         
        | id_global
+         
        | array_selector
+         
        ;
 
 rvalue : lvalue 
