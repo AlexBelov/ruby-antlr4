@@ -1,8 +1,8 @@
 grammar Ruby;
 
 @members {
-  int SemanticErrorsNum;
-  java.util.LinkedList<String> definitions = new  java.util.LinkedList<String>();
+  public int SemanticErrorsNum = 0;
+  java.util.LinkedList<String> definitions = new java.util.LinkedList<String>();
 
   public static boolean is_defined(java.util.LinkedList<String> definitions, String variable) {
        int index = definitions.indexOf(variable);
@@ -150,7 +150,7 @@ array_assignment : lvalue array_definition ASSIGN rvalue
                     if (!is_defined(definitions, variable)) {
                       System.out.println("Error: Undefined variable " + variable + "!");
                       SemanticErrorsNum++;
-                    } 
+                    }
                    }
                  | lvalue ASSIGN array_definition
                    {
@@ -171,6 +171,37 @@ array_selector : id LEFT_SBRACKET rvalue RIGHT_SBRACKET
                | function_call LEFT_SBRACKET rvalue RIGHT_SBRACKET
                ;
 
+int_result : int_result MUL int_result
+           | int_result DIV int_result
+           | int_result MOD int_result
+           | int_result PLUS int_result
+           | int_result MINUS int_result
+           | int_t
+           ;
+
+float_result : float_result MUL float_result
+             | int_result MUL float_result
+             | float_result MUL int_result
+             | float_result DIV float_result
+             | int_result DIV float_result  
+             | float_result DIV int_result           
+             | int_result MOD float_result
+             | float_result MOD int_result
+             | float_result MOD float_result
+             | float_result PLUS float_result
+             | int_result PLUS float_result
+             | float_result PLUS int_result
+             | float_result MINUS float_result
+             | int_result MINUS float_result
+             | float_result MINUS int_result
+             | float_t
+             ;
+
+string_result : string_result MUL int_result
+              | int_result MUL string_result
+              | literal_t
+              ;
+
 lvalue : id  
        | id_global        
        ;
@@ -182,8 +213,13 @@ rvalue : lvalue
             System.out.println("Error: Undefined variable " + variable + "!");
             SemanticErrorsNum++;
           }
-         } 
+         }       
        | array_assignment
+
+       | int_result
+       | float_result
+       | string_result
+
        | assignment       
        | function_call
        | literal_t
