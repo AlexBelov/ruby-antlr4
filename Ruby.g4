@@ -82,12 +82,25 @@ assignment : lvalue ASSIGN rvalue
            | lvalue EXP_ASSIGN rvalue
            ;
 
+array_definition : LEFT_SBRACKET array_definition_elements RIGHT_SBRACKET;
+
+array_definition_elements : rvalue
+                          | array_definition_elements COMMA rvalue
+                          ;
+
+array_selector : id LEFT_SBRACKET rvalue RIGHT_SBRACKET
+               | id_global LEFT_SBRACKET rvalue RIGHT_SBRACKET
+               | function_call LEFT_SBRACKET rvalue RIGHT_SBRACKET
+               ;
+
 lvalue : id
        | id_global
+       | array_selector
        ;
 
 rvalue : lvalue 
        | assignment
+       | array_definition
        | function_call
        | literal_t
        | bool_t
@@ -212,6 +225,8 @@ NOT : 'not' | '!';
 
 LEFT_RBRACKET : '(';
 RIGHT_RBRACKET : ')';
+LEFT_SBRACKET : '[';
+RIGHT_SBRACKET : ']';
 
 NIL : 'nil';
 
