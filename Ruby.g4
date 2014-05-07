@@ -52,7 +52,7 @@ function_definition_header : DEF function_name CRLF
                               } 
                               else {
                                 definitions.add(func);
-                                System.out.println(definitions.getLast());
+                                //System.out.println(definitions.getLast());
                               }
                              }
                            ;
@@ -126,21 +126,7 @@ while_expression_list : expression terminator
 
 assignment : lvalue ASSIGN rvalue
              {
-              String rval = $rvalue.text;
-              String lval = $lvalue.text;
-
-              if (rval.substring(0).equals("[")) {
-                definitions.add($lvalue.text);
-              }
-              else if (lval.substring(lval.length()-1).equals("]")) {
-                if (!is_defined(definitions, lval.substring(0, lval.indexOf("[")))) {
-                  System.out.println("Error: Undefined variable " + lval + "!");
-                }
-              }
-              else {
-                definitions.add($lvalue.text);
-                //System.out.println(definitions.getLast());
-              }
+              definitions.add($lvalue.text);
              }
            | lvalue PLUS_ASSIGN rvalue
              {
@@ -186,6 +172,19 @@ assignment : lvalue ASSIGN rvalue
              }
            ;
 
+array_assignment : lvalue array_definition ASSIGN rvalue
+                   {
+                    String variable = $lvalue.text;
+                    if (!is_defined(definitions, variable)) {
+                      System.out.println("Error: Undefined variable " + variable + "!");
+                    } 
+                   }
+                 | lvalue ASSIGN array_definition
+                   {
+                    definitions.add($lvalue.text);
+                   }
+                 ;
+
 array_definition : LEFT_SBRACKET array_definition_elements RIGHT_SBRACKET
                  | LEFT_SBRACKET RIGHT_SBRACKET
                  ;
@@ -199,17 +198,19 @@ array_selector : id LEFT_SBRACKET rvalue RIGHT_SBRACKET
                | function_call LEFT_SBRACKET rvalue RIGHT_SBRACKET
                ;
 
-lvalue : id
-         
-       | id_global
-         
-       | array_selector
-         
+lvalue : id  
+       | id_global        
        ;
 
 rvalue : lvalue 
-       | assignment
-       | array_definition
+         {
+          String variable = $lvalue.text;
+          if (!is_defined(definitions, variable)) {
+            System.out.println("Error: Undefined variable " + variable + "!");
+          }
+         } 
+       | array_assignment
+       | assignment       
        | function_call
        | literal_t
        | bool_t
