@@ -123,7 +123,9 @@ rvalue : lvalue
        | rvalue GREATER_EQUAL rvalue
 
        | rvalue OR rvalue
-       | rvalue AND rvalue     
+       | rvalue AND rvalue 
+
+       | LEFT_RBRACKET rvalue RIGHT_RBRACKET    
        ;
 
 literal_t : LITERAL;
