@@ -9,6 +9,7 @@ expression_list : expression terminator
 expression : function_definition
            | require_block
            | rvalue
+           | return_statement
            ;
 
 require_block : REQUIRE literal_t;
@@ -32,6 +33,8 @@ function_definition_params : LEFT_RBRACKET function_definition_params_list RIGHT
 function_definition_params_list : id
                                 | function_definition_params_list COMMA id
                                 ;
+
+return_statement : RETURN rvalue;
 
 assignment : lvalue ASSIGN rvalue
            | lvalue PLUS_ASSIGN rvalue
@@ -120,6 +123,7 @@ CRLF : '\n';
 REQUIRE : 'require';
 END : 'end';
 DEF : 'def';
+RETURN : 'return';
 
 TRUE : 'true';
 FALSE : 'false';
