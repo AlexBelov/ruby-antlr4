@@ -27,6 +27,7 @@ expression : function_definition
            | rvalue
            | return_statement
            | while_statement
+           | for_statement
            ;
 
 require_block : REQUIRE literal_t;
@@ -131,6 +132,18 @@ while_expression_list : expression terminator
                       | while_expression_list RETRY terminator
                       | while_expression_list BREAK terminator
                       ;
+
+for_statement : FOR LEFT_RBRACKET expression SEMICOLON expression SEMICOLON expression RIGHT_RBRACKET crlf for_expression_list END
+              | FOR expression SEMICOLON expression SEMICOLON expression crlf for_expression_list END
+              ;
+
+for_expression_list : expression terminator
+                    | RETRY terminator
+                    | BREAK terminator
+                    | for_expression_list expression terminator
+                    | for_expression_list RETRY terminator
+                    | for_expression_list BREAK terminator
+                    ;
 
 assignment : lvalue ASSIGN rvalue
              {
@@ -314,6 +327,7 @@ UNLESS : 'unless';
 WHILE : 'while';
 RETRY : 'retry';
 BREAK : 'break';
+FOR : 'for';
 
 TRUE : 'true';
 FALSE : 'false';

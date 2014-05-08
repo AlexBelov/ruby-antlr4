@@ -63,3 +63,11 @@ a = [1,2,3]
 a[1] = 4
 
 func3 a, 'abc', func1(a, "123")
+
+for i=0;i<10;i+=1
+	return 1
+end
+
+for(i=0;i<10;i+=1)
+	return 1
+end
