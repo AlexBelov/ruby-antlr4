@@ -1,7 +1,9 @@
 a = 1+2
-b
+b = 10;
 c = 2+3
-d
+#d
+
+g = [1,3,4,5
 
 def func1(a,b)
 	a = b + 1
@@ -16,8 +18,8 @@ def func3
 	return 1
 end
 
-func4(a)
-func5()
+#func4(a)
+#func5()
 
 def func3
 	return 2
@@ -28,7 +30,6 @@ e += 1
 n = []
 n[2] = 2
 k[2] = 1
-g = [1,3,4,5]
 
 a = 
 b = func1(1,

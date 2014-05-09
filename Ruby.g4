@@ -2,7 +2,7 @@ grammar Ruby;
 
 @members {
   public int SemanticErrorsNum = 0;
-  public int NumStr = 0;
+  public int NumStr = 1;
   java.util.LinkedList<String> definitions = new java.util.LinkedList<String>();
 
   public static boolean is_defined(java.util.LinkedList<String> definitions, String variable) {
