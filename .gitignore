@@ -4,11 +4,6 @@
 # But not these files...
 !.gitignore
 !Ruby.g4
-!run.sh
-!preproc.rb
-!test.rb
-!test1.rb
-!test2.rb
-!test3.rb
+!*.sh
+!*.rb
 !TreeWalker.java
-!test.sh

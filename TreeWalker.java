@@ -27,8 +27,9 @@ public class TreeWalker {
 			i++;
 		}
 		String tab_str = "	";
-		if(tree.getChildCount() != 1) {
+		if(tree.getChild(0) == null && !tree.getText().contains("\n")) {
 			System.out.println(str_repeat(tab_str, Tab) + tree.getText());
+			//System.out.println("push " + tree.getText());
 		}
 		return tree;
 	}
