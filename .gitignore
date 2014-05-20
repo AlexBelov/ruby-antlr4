@@ -1,10 +1,4 @@
 # Ignore everything
-*
-
-# But not these files...
-!.gitignore
-!Ruby.g4
-!*.sh
-!*.rb
-!TreeWalker.java
-!/lab4
+*.class
+*.tokens
+*.java
