@@ -46,7 +46,6 @@ function_definition_header : DEF function_name crlf
                               } 
                               else {
                                 definitions.add(func);
-                                //System.out.println(definitions.getLast());
                               }
                              }
                            | DEF function_name function_definition_params crlf
@@ -58,7 +57,6 @@ function_definition_header : DEF function_name crlf
                               } 
                               else {
                                 definitions.add(func);
-                                //System.out.println(definitions.getLast());
                               }
                              }
                            ;
