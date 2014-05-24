@@ -27,10 +27,10 @@ public class TreeWalker {
 			i++;
 		}
 		String tab_str = "	";
-		if(tree.getChild(0) == null && !tree.getText().contains("\n")) {
-			System.out.println(str_repeat(tab_str, Tab) + tree.getText());
-			//System.out.println("push " + tree.getText());
-		}
+		// if(tree.getChild(0) == null && !tree.getText().contains("\n")) {
+		// 	System.out.println(str_repeat(tab_str, Tab) + tree.getText());
+		// }
+		System.out.println(str_repeat(tab_str, Tab) + tree.getPayload().value);
 		return tree;
 	}
 	public static String str_repeat(String str, int i) {

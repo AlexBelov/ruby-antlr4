@@ -84,7 +84,7 @@ function_call : function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRAC
                     System.out.println("line " + NumStr + " Error! Undefined function " + func + "!");
                     SemanticErrorsNum++;
                   }
-                }
+                } # FunctionCall
               | function_name function_call_param_list
                 {
                   String func = $function_name.text;
@@ -92,7 +92,7 @@ function_call : function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRAC
                     System.out.println("line " + NumStr + " Error! Undefined function " + func + "!");
                     SemanticErrorsNum++;
                   }
-                }
+                } # FunctionCall
               | function_name LEFT_RBRACKET RIGHT_RBRACKET
                 {
                   String func = $function_name.text;
@@ -100,7 +100,7 @@ function_call : function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRAC
                     System.out.println("line " + NumStr + " Error! Undefined function " + func + "!");
                     SemanticErrorsNum++;
                   }
-                }
+                } # FunctionCall
               ;
 
 function_call_param_list : function_call_params;
@@ -189,7 +189,7 @@ array_selector : id LEFT_SBRACKET rvalue RIGHT_SBRACKET
 int_result : int_result MUL int_result
            | int_result DIV int_result
            | int_result MOD int_result
-           | int_result PLUS int_result
+           | int_result op=PLUS int_result
            | int_result MINUS int_result
            | int_t
            ;
@@ -212,7 +212,7 @@ float_result : float_result MUL float_result
              | float_t
              ;
 
-string_result : string_result MUL int_result
+string_result : string_result op=MUL int_result
               | int_result MUL string_result
               | literal_t
               ;
@@ -280,7 +280,7 @@ literal_t : LITERAL;
 
 float_t : FLOAT;
 
-int_t : INT;
+int_t : INT # Int;
 
 bool_t : TRUE
        | FALSE
@@ -374,7 +374,7 @@ NIL : 'nil';
 
 SL_COMMENT : '#' ~('\r' | '\n')* '\n' {skip();};
 ML_COMMENT : '=begin' .*? '=end\n' {skip();};
-WS : (' '|'\t')+ {skip();};
+WS : (' '|'\t')+ -> skip;
 
 INT : [0-9]+;
 FLOAT : [0-9]*'.'[0-9]+;
