@@ -14,6 +14,7 @@ public class TreeWalker {
 		RubyLexer lexer = new RubyLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		parser = new RubyParser(tokens);
+		ParseTreeWalker walker = new ParseTreeWalker();
 		ParseTree tree = parser.prog(); // parse; start at prog
 		tree_walk(tree);
 	}

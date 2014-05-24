@@ -347,8 +347,8 @@ RIGHT_SBRACKET : ']';
 
 NIL : 'nil';
 
-SL_COMMENT : '#' ~('\r' | '\n')* '\n' -> skip
-ML_COMMENT : '=begin' .*? '=end\n' -> skip
+SL_COMMENT : ('#' ~('\r' | '\n')* '\n') -> skip;
+ML_COMMENT : ('=begin' .*? '=end\n') -> skip;
 WS : (' '|'\t')+ -> skip;
 
 INT : [0-9]+;
