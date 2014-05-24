@@ -186,33 +186,21 @@ array_selector : id LEFT_SBRACKET rvalue RIGHT_SBRACKET
                | function_call LEFT_SBRACKET rvalue RIGHT_SBRACKET
                ;
 
-int_result : int_result MUL int_result
-           | int_result DIV int_result
-           | int_result MOD int_result
-           | int_result op=PLUS int_result
-           | int_result MINUS int_result
+int_result : int_result ( MUL | DIV | MOD ) int_result
+           | int_result ( PLUS | MINUS ) int_result
            | int_t
            ;
 
-float_result : float_result MUL float_result
-             | int_result MUL float_result
-             | float_result MUL int_result
-             | float_result DIV float_result
-             | int_result DIV float_result  
-             | float_result DIV int_result           
-             | int_result MOD float_result
-             | float_result MOD int_result
-             | float_result MOD float_result
-             | float_result PLUS float_result
-             | int_result PLUS float_result
-             | float_result PLUS int_result
-             | float_result MINUS float_result
-             | int_result MINUS float_result
-             | float_result MINUS int_result
+float_result : float_result ( MUL | DIV | MOD ) float_result
+             | int_result ( MUL | DIV | MOD ) float_result
+             | float_result ( MUL | DIV | MOD ) int_result
+             | float_result ( PLUS | MINUS ) float_result
+             | int_result ( PLUS | MINUS )  float_result
+             | float_result ( PLUS | MINUS )  int_result
              | float_t
              ;
 
-string_result : string_result op=MUL int_result
+string_result : string_result MUL int_result
               | int_result MUL string_result
               | literal_t
               ;
@@ -245,33 +233,22 @@ rvalue : lvalue
 
        | rvalue EXP rvalue
 
-       | NOT rvalue
-       | BIT_NOT rvalue
+       | ( NOT | BIT_NOT )rvalue
 
-       | rvalue MUL rvalue
-       | rvalue DIV rvalue
-       | rvalue MOD rvalue
+       | rvalue ( MUL | DIV | MOD ) rvalue
+       | rvalue ( PLUS | MINUS ) rvalue
 
-       | rvalue PLUS rvalue
-       | rvalue MINUS rvalue
-
-       | rvalue BIT_SHL rvalue
-       | rvalue BIT_SHR rvalue
+       | rvalue ( BIT_SHL | BIT_SHR ) rvalue
 
        | rvalue BIT_AND rvalue
 
-       | rvalue BIT_OR rvalue
-       | rvalue BIT_XOR rvalue
+       | rvalue ( BIT_OR | BIT_XOR )rvalue
 
-       | rvalue EQUAL rvalue
-       | rvalue NOT_EQUAL rvalue
-       | rvalue LESS_EQUAL rvalue
-       | rvalue LESS rvalue
-       | rvalue GREATER rvalue
-       | rvalue GREATER_EQUAL rvalue
+       | rvalue ( LESS | GREATER | LESS_EQUAL | GREATER_EQUAL ) rvalue
 
-       | rvalue OR rvalue
-       | rvalue AND rvalue 
+       | rvalue ( EQUAL | NOT_EQUAL ) rvalue
+
+       | rvalue ( OR | AND ) rvalue
 
        | LEFT_RBRACKET rvalue RIGHT_RBRACKET    
        ;
@@ -372,8 +349,8 @@ RIGHT_SBRACKET : ']';
 
 NIL : 'nil';
 
-SL_COMMENT : '#' ~('\r' | '\n')* '\n' {skip();};
-ML_COMMENT : '=begin' .*? '=end\n' {skip();};
+SL_COMMENT : '#' ~('\r' | '\n')* '\n' -> skip
+ML_COMMENT : '=begin' .*? '=end\n' -> skip
 WS : (' '|'\t')+ -> skip;
 
 INT : [0-9]+;
