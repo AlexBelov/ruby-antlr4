@@ -1,0 +1,12 @@
+.main
+
+$P10 = 1000
+set_global "$foo", $P10
+gl()
+
+.end
+
+.sub gl
+	get_global $P0, "$foo"
+	say $P0
+.end
